@@ -19,7 +19,7 @@
 		var targetImg;//image what you resize
 		var positionX="";
 		var positionY="";
-		var sizing=$("<div id='sizing' style='background-color:#ececec;position:absolute;padding:2px' draggable=true>"+
+		var sizing=$("<div id='sizing' style='background-color:#ececec;position:absolute;padding:2px'>"+
 					"<b style='text-align:center;display:block'>Image resizing</b>"+
 					"<label>"+
 					"<input type='radio' name='sizing' value='width'>Fit with Width</input>"+
@@ -30,11 +30,59 @@
 					"</label>"+
 					"<input type='text' id='zoom' style='width:3em'>%<br>"+
 					"<label style='text-align:right;display:block'>"+
-					"<input type='button' value='Apply' id='butApply'>"+ //onclick='applyResize()'>"+
-					"<input type='button' value='close' id='butClose'>"+ //onclick='closeResize()'>"+
-					"</label></div draggable=true>");
+					"<input type='button' value='Apply' id='butApply'>"+ 
+					"<input type='button' value='close' id='butClose'>"+ 
+					"</label></div>");
 		$("body").append(sizing);
 		$(sizing).hide();
+		
+		//to dragable resize window
+		var x;
+		var y;
+		var element=$("#sizing").get(0);
+		//mouse down event
+		$("#sizing").on("mousedown",mdown);
+
+		//fire when mouse down
+		function mdown(e) {
+			//get relative position
+			x = e.pageX - this.offsetLeft;
+			y = e.pageY - this.offsetTop;
+
+			//move event
+			$("body").on("mousemove",mmove);
+		}
+
+		//fire when mouse move
+		function mmove(e) {
+			//prevent default event
+			e.preventDefault();
+
+			//trace mouse
+			$("#sizing").css({"top":e.pageY - y + "px","left":e.pageX - x + "px"});
+			
+			//mouse up or mouse leave event
+			$("#sizing").on("mouseup",mup);
+			$("body").on("mouseleave",mup);
+		}
+
+		//fire when mouse up
+		function mup(e) {
+			//remove event handler
+			$("body").off("mousemove",mmove);
+			$("body").off("mouseleave",mup);
+			$("#sizing").off("mouseup",mup);
+		}
+
+		//change icon
+		$(document).on("mouseenter","#sizing",function(e){
+			$("#sizing").css("cursor","pointer");
+		});
+		
+		$(document).on("mouseleave","#sizing",function(e){
+			$("#sizing").css("cursor","default");
+			$(document).css("cursor","default");
+		});
 		
 		//Event:double click --- resize image
 		cled.$frame.contents().find("body").on("dblclick","img",function(e)

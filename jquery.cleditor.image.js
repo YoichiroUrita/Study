@@ -1,4 +1,4 @@
-/************************************************************************************
+/*********************************************************************************************
  * cleditor用画像操作拡張プラグイン
  * You can drop image file and paste image by base64 on cleditor iframe
  *
@@ -8,7 +8,9 @@
  *
  * Licensed under the MIT or GPL Version 2
  * Y.Urita 2018.12.2	ver.0.0.0
- ************************************************************************************/
+ * Y.Urita 2018.12.4    ver.0.0.1 draggable to resize window
+ * Y.Urita 2018.12.5    ver.0.0.2 fixed drag problem when click  buttons on resize window 
+ ********************************************************************************************/
  
 (function ($) {
 	
@@ -82,6 +84,11 @@
 		$(document).on("mouseleave","#sizing",function(e){
 			$("#sizing").css("cursor","default");
 			$(document).css("cursor","default");
+		});
+		
+		//prevent keep dragging 
+		$("#sizing").on("click","input",function(e){
+			mup(e);
 		});
 		
 		//Event:double click --- resize image
